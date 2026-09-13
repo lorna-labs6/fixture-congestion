@@ -1,0 +1,11 @@
+[
+  { "date": "2026-08-09", "team": "Kingsview FC", "opponent": "Aldermoor United", "competition": "League", "venue": "home" },
+  { "date": "2026-08-16", "team": "Kingsview FC", "opponent": "Redbridge Town", "competition": "League", "venue": "away" },
+  { "date": "2026-08-23", "team": "Kingsview FC", "opponent": "Fenwick Athletic", "competition": "League", "venue": "home" },
+  { "date": "2026-08-26", "team": "Kingsview FC", "opponent": "Marsh Lane FC", "competition": "Cup", "venue": "away" },
+  { "date": "2026-08-30", "team": "Kingsview FC", "opponent": "Old Colliery", "competition": "League", "venue": "home" },
+  { "date": "2026-09-02", "team": "Kingsview FC", "opponent": "Northgate Rovers", "competition": "Cup", "venue": "home" },
+  { "date": "2026-09-06", "team": "Kingsview FC", "opponent": "Portway Albion", "competition": "League", "venue": "away" },
+  { "date": "2026-09-20", "team": "Kingsview FC", "opponent": "Sandmoor United", "competition": "League", "venue": "home" },
+  { "date": "2026-10-04", "team": "Kingsview FC", "opponent": "Ellery Wanderers", "competition": "League", "venue": "away" }
+]

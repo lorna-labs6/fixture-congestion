@@ -1,0 +1,13 @@
+{
+  "name": "fixture-congestion",
+  "version": "0.1.0",
+  "description": "Finds the most congested stretch of fixtures for a team.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "fixture-congestion": "src/cli.ts"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types src/cli.ts"
+  }
+}
