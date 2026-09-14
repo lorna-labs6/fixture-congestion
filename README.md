@@ -18,7 +18,16 @@ Fixtures live in a JSON file, one object per match:
 { "date": "2026-08-26", "team": "Kingsview FC", "opponent": "Marsh Lane FC", "competition": "Cup", "venue": "away" }
 ```
 
-`competition` and `venue` are optional (`venue` defaults to `"home"`).
+Or a CSV file with the same fields as headers:
+
+```csv
+date,team,opponent,competition,venue
+2026-08-26,Kingsview FC,Marsh Lane FC,Cup,away
+```
+
+The format is picked from the file extension (`.csv` vs anything else,
+which is treated as JSON). `competition` and `venue` are optional in
+both (`venue` defaults to `"home"`).
 
 Run it against the sample data (requires Node 22.6+ for native
 TypeScript support, or compile with `tsc` first if you have it
@@ -55,7 +64,10 @@ this tool does not try to guess at fuzzy matches.
 
 `src/congestion.ts` holds the logic:
 
-- `parseFixtures` turns raw JSON into typed, date-validated fixtures.
+- `parseFixtures` turns raw parsed objects (from JSON or CSV) into typed,
+  date-validated fixtures.
+- `parseCsv` turns CSV text into the same raw shape `parseFixtures`
+  expects, so both formats share one validation path.
 - `worstWindow` sorts a team's fixtures by date and slides a window
   across them with two pointers, tracking the most matches seen in
   any `windowDays`-wide span. This is O(n), not O(n^2).
@@ -65,5 +77,5 @@ this tool does not try to guess at fuzzy matches.
 
 ## Status
 
-Early skeleton. No CSV import yet, no tests, no build output committed.
-See the source for what's there.
+Early skeleton. No tests, no build output committed. See the source for
+what's there.

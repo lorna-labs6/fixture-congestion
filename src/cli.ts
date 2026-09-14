@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
-import { parseFixtures, buildReport, type Fixture } from "./congestion.ts";
+import { extname } from "node:path";
+import { parseFixtures, parseCsv, buildReport, type Fixture } from "./congestion.ts";
 
 const DEFAULT_WINDOW_DAYS = 14;
 
@@ -58,7 +59,8 @@ function main(argv: string[]): void {
 
   let fixtures: Fixture[];
   try {
-    const raw = JSON.parse(readFileSync(file, "utf8"));
+    const text = readFileSync(file, "utf8");
+    const raw = extname(file).toLowerCase() === ".csv" ? parseCsv(text) : JSON.parse(text);
     fixtures = parseFixtures(raw);
   } catch (err) {
     console.error(`failed to load fixtures: ${(err as Error).message}`);

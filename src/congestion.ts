@@ -63,13 +63,71 @@ export function parseFixtures(raw: unknown): Fixture[] {
       throw new Error(`fixture at index ${index} has an unparseable date: "${r.date}"`);
     }
     const venue = r.venue === "away" ? "away" : "home";
+    const competition = r.competition?.trim() ? r.competition.trim() : "unknown";
     return {
       date,
       team: r.team,
       opponent: r.opponent,
-      competition: r.competition ?? "unknown",
+      competition,
       venue,
     };
+  });
+}
+
+/**
+ * Splits one CSV line into cells, honoring double-quoted fields (so a
+ * quoted value can contain commas) and "" as an escaped quote inside one.
+ */
+function parseCsvLine(line: string): string[] {
+  const cells: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i]!;
+    if (inQuotes) {
+      if (char === '"') {
+        if (line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        current += char;
+      }
+    } else if (char === '"') {
+      inQuotes = true;
+    } else if (char === ",") {
+      cells.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  cells.push(current);
+  return cells;
+}
+
+/**
+ * Turns CSV text (header row + one row per fixture) into the same raw shape
+ * parseFixtures expects from JSON, so both formats share one validation path.
+ */
+export function parseCsv(text: string): RawFixture[] {
+  const lines = text.split(/\r\n|\n/).filter((line) => line.trim().length > 0);
+  if (lines.length === 0) return [];
+
+  const header = parseCsvLine(lines[0]!).map((h) => h.trim());
+  return lines.slice(1).map((line, index) => {
+    const cells = parseCsvLine(line);
+    if (cells.length !== header.length) {
+      throw new Error(`CSV row ${index + 2} has ${cells.length} field(s), expected ${header.length}`);
+    }
+    const row: Record<string, string> = {};
+    header.forEach((key, i) => {
+      row[key] = cells[i]!.trim();
+    });
+    return row as unknown as RawFixture;
   });
 }
 
