@@ -8,6 +8,7 @@
     "fixture-congestion": "src/cli.ts"
   },
   "scripts": {
-    "start": "node --experimental-strip-types src/cli.ts"
+    "start": "node --experimental-strip-types src/cli.ts",
+    "test": "node --experimental-strip-types --test src/*.test.ts"
   }
 }

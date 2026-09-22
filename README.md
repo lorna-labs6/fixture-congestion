@@ -77,5 +77,8 @@ this tool does not try to guess at fuzzy matches.
 
 ## Status
 
-Early skeleton. No tests, no build output committed. See the source for
-what's there.
+Early skeleton. `worstWindow` and `shortestRest` have unit tests covering
+boundary cases (empty/single-fixture lists, same-day fixtures, the
+inclusive window edge); the CLI and parsing layer don't yet. No build
+output committed. Run tests with `npm test` (needs Node 22.6+ for
+`--experimental-strip-types`).
