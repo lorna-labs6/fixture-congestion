@@ -60,6 +60,12 @@ Average days between fixtures: 7.9
 Team name matching is case-insensitive and must be exact otherwise —
 this tool does not try to guess at fuzzy matches.
 
+Pass more than one team name to get a report for each in one run:
+
+```
+node --experimental-strip-types src/cli.ts data/sample-fixtures.json "Kingsview FC" "Marsh Lane FC"
+```
+
 ## How it works
 
 `src/congestion.ts` holds the logic:

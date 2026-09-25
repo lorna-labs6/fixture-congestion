@@ -38,15 +38,11 @@ function printReport(report: ReturnType<typeof buildReport>): void {
 }
 
 function main(argv: string[]): void {
-  const [file, team, ...rest] = argv;
-  if (!file || !team) {
-    console.error("usage: fixture-congestion <fixtures.json> <team> [--window <days>]");
-    process.exitCode = 1;
-    return;
-  }
+  const [file, ...rest] = argv;
 
   let windowDays = DEFAULT_WINDOW_DAYS;
   const windowFlagIndex = rest.indexOf("--window");
+  const teamArgs = windowFlagIndex === -1 ? rest : [...rest.slice(0, windowFlagIndex), ...rest.slice(windowFlagIndex + 2)];
   if (windowFlagIndex !== -1) {
     const value = Number(rest[windowFlagIndex + 1]);
     if (!Number.isFinite(value) || value <= 0) {
@@ -55,6 +51,12 @@ function main(argv: string[]): void {
       return;
     }
     windowDays = value;
+  }
+
+  if (!file || teamArgs.length === 0) {
+    console.error("usage: fixture-congestion <fixtures.json> <team> [<team> ...] [--window <days>]");
+    process.exitCode = 1;
+    return;
   }
 
   let fixtures: Fixture[];
@@ -68,8 +70,10 @@ function main(argv: string[]): void {
     return;
   }
 
-  const report = buildReport(fixtures, team, windowDays);
-  printReport(report);
+  for (const team of teamArgs) {
+    const report = buildReport(fixtures, team, windowDays);
+    printReport(report);
+  }
 }
 
 main(process.argv.slice(2));
