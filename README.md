@@ -66,6 +66,14 @@ Pass more than one team name to get a report for each in one run:
 node --experimental-strip-types src/cli.ts data/sample-fixtures.json "Kingsview FC" "Marsh Lane FC"
 ```
 
+Add `--json` to print the reports as a JSON array (one entry per team,
+even if there is only one) instead of the text summary. Dates come out
+as ISO timestamps. Load errors still go to stderr with a non-zero exit.
+
+```
+node --experimental-strip-types src/cli.ts data/sample-fixtures.json "Kingsview FC" --json
+```
+
 ## How it works
 
 `src/congestion.ts` holds the logic:

@@ -41,20 +41,28 @@ function main(argv: string[]): void {
   const [file, ...rest] = argv;
 
   let windowDays = DEFAULT_WINDOW_DAYS;
-  const windowFlagIndex = rest.indexOf("--window");
-  const teamArgs = windowFlagIndex === -1 ? rest : [...rest.slice(0, windowFlagIndex), ...rest.slice(windowFlagIndex + 2)];
-  if (windowFlagIndex !== -1) {
-    const value = Number(rest[windowFlagIndex + 1]);
-    if (!Number.isFinite(value) || value <= 0) {
-      console.error("--window must be a positive number of days");
-      process.exitCode = 1;
-      return;
+  let json = false;
+  const teamArgs: string[] = [];
+  for (let i = 0; i < rest.length; i++) {
+    const arg = rest[i]!;
+    if (arg === "--json") {
+      json = true;
+    } else if (arg === "--window") {
+      const value = Number(rest[i + 1]);
+      if (!Number.isFinite(value) || value <= 0) {
+        console.error("--window must be a positive number of days");
+        process.exitCode = 1;
+        return;
+      }
+      windowDays = value;
+      i++;
+    } else {
+      teamArgs.push(arg);
     }
-    windowDays = value;
   }
 
   if (!file || teamArgs.length === 0) {
-    console.error("usage: fixture-congestion <fixtures.json> <team> [<team> ...] [--window <days>]");
+    console.error("usage: fixture-congestion <fixtures.json> <team> [<team> ...] [--window <days>] [--json]");
     process.exitCode = 1;
     return;
   }
@@ -70,8 +78,15 @@ function main(argv: string[]): void {
     return;
   }
 
-  for (const team of teamArgs) {
-    const report = buildReport(fixtures, team, windowDays);
+  const reports = teamArgs.map((team) => buildReport(fixtures, team, windowDays));
+
+  if (json) {
+    // Always an array, even for one team, so scripts don't have to branch on shape.
+    console.log(JSON.stringify(reports, null, 2));
+    return;
+  }
+
+  for (const report of reports) {
     printReport(report);
   }
 }
